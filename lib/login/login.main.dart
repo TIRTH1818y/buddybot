@@ -1,115 +1,146 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: Scaffold(
-      backgroundColor: Color(0xFF121212), // Dark background
-      body: Center(child: DarkMode3DButton()),
-    ),
-  ));
-}
-
-class DarkMode3DButton extends StatefulWidget {
-  const DarkMode3DButton({Key? key}) : super(key: key);
+class login_container extends StatefulWidget {
+  const login_container({super.key});
 
   @override
-  State<DarkMode3DButton> createState() => _DarkMode3DButtonState();
+  State<login_container> createState() => _login_containerState();
 }
 
-class _DarkMode3DButtonState extends State<DarkMode3DButton> {
-  bool _isPressed = false;
-
+class _login_containerState extends State<login_container> {
+  bool loginpage = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: ()=>Navigator.pop(context), icon: Icon(Icons.arrow_back,color: Colors.white,)),
-        backgroundColor: Colors.black,
-        title: Text("hello login",style: TextStyle(color: Colors.white),),
-      ),
-      body:  GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 32),
-          transform: _isPressed
-              ? Matrix4.translationValues(0, 3, 0) // Simulates button press depth
-              : Matrix4.translationValues(0, 0, 0),
-          decoration: BoxDecoration(
-            color: const Color(0xFF2A2A2A), // Button background color
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: _isPressed
-                ? [ // Active state shadows
-              const BoxShadow(
-                color: Color(0xFF3A3A3A),
-                offset: Offset(0, 1),
-                blurRadius: 0,
-              ),
-              const BoxShadow(
-                color: Color(0xFF252525),
-                offset: Offset(0, 2),
-                blurRadius: 0,
-              ),
-              const BoxShadow(
-                color: Color(0xFF202020),
-                offset: Offset(0, 4),
-                blurRadius: 0,
-              ),
-              const BoxShadow(
-                color: Color(0xFF1C1C1C),
-                offset: Offset(0, 6),
-                blurRadius: 0,
-              ),
-            ]
-                : [ // Default state shadows
-              const BoxShadow(
-                color: Color(0xFF3A3A3A),
-                offset: Offset(0, 1),
-                blurRadius: 0,
-              ),
-              const BoxShadow(
-                color: Color(0xFF252525),
-                offset: Offset(0, 2),
-                blurRadius: 0,
-              ),
-              const BoxShadow(
-                color: Color(0xFF202020),
-                offset: Offset(0, 4),
-                blurRadius: 0,
-              ),
-              const BoxShadow(
-                color: Color(0xFF1C1C1C),
-                offset: Offset(0, 6),
-                blurRadius: 0,
-              ),
-              const BoxShadow(
-                color: Color(0xFF141414),
-                offset: Offset(0, 7),
-                blurRadius: 0,
-              ),
-            ],
-          ),
-          child: Text(
-            "Login",
-            style: TextStyle(
-              color: const Color(0xFFE0E0E0), // Text color
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              shadows: const [
-                Shadow(
-                  color: Colors.black,
-                  offset: Offset(0, 1),
+      body:  AnimatedPositioned(
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+        bottom: loginpage ? 0 : -800,
+        // Adjust height based on visibility
+        left: 0,
+        right: 0,
+        child: Column(
+          children: [
+            Container(
+              height: 400,
+              decoration: BoxDecoration(
+                color: Colors.white70,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
                 ),
-              ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              loginpage =
+                              !loginpage; // Toggle the login container
+                            });
+                          },
+                          icon: Icon(
+                            Icons.arrow_back_ios_rounded,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 50),
+                          child: Text(
+                            'WELCOME BACK..!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 50),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(4, 4),
+                            blurRadius: 8,
+                          ),
+                          BoxShadow(
+                            color: Colors.white,
+                            offset: Offset(-4, -4),
+                            blurRadius: 8,
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16),
+                          labelText: 'Email',
+                          labelStyle: TextStyle(color: Colors.blue),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(4, 4),
+                            blurRadius: 8,
+                          ),
+                          BoxShadow(
+                            color: Colors.white,
+                            offset: Offset(-4, -4),
+                            blurRadius: 8,
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16),
+                          labelText: 'Password',
+                          labelStyle: TextStyle(color: Colors.blue),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    Container(
+                      height: 40,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue, elevation: 10),
+                        onPressed: () {
+                          // Handle login logic
+                        },
+                        child: Text(
+                          'Login',
+                          style:
+                          TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-      ) ,
+      ),
     );
-
-
   }
 }
