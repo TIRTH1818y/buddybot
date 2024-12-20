@@ -157,7 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Container(
                   height: 400,
                   decoration: BoxDecoration(
-                    color: Colors.white70,
+                    color: Colors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
@@ -206,7 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 blurRadius: 8,
                               ),
                               BoxShadow(
-                                color: Colors.white,
+                                color: Colors.black12,
                                 offset: Offset(-4, -4),
                                 blurRadius: 8,
                               ),
@@ -253,83 +253,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         SizedBox(height: 30),
                         Container(
-                          height: 40,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue, elevation: 10),
-                            onPressed: () {
-                             setState(() {
-                               loginpage=!loginpage;
-                             });
-                            },
-                            child: Text(
-                              'Login',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          AnimatedPositioned(
-            duration: Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-            bottom: signinpage ? 0 : -800,
-            left: 0,
-            right: 0,
-            child: Column(
-              children: [
-                Container(
-                  height: 600,
-                  decoration: BoxDecoration(
-                    color: Colors.white70,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                    ),
-                  ),
-                    child:    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                            //  signinpage = !signinpage; // Toggle the login container
-                            });
-                          },
-                          icon: Icon(
-                            Icons.arrow_back_ios_rounded,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          'Create an Account',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        // Username Field
-                        build3DTextField('Username', false),
-                        SizedBox(height: 20),
-                        // Email Field
-                        build3DTextField('Email', false),
-                        SizedBox(height: 20),
-                        // Password Field
-                        build3DTextField('Password', true),
-                        SizedBox(height: 20),
-                        // Birthday Field
-                        build3DTextField('Birthday (DD/MM/YYYY)', false),
-                        SizedBox(height: 20),
-                        // Sign Up Button
-                        Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [Colors.greenAccent, Colors.blueAccent],
@@ -358,25 +281,132 @@ class _MyHomePageState extends State<MyHomePage> {
                               EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                             ),
                             onPressed: () {
-                              // Handle sign-up action here
+                             loginpage =!loginpage;
                             },
                             child: Text(
-                              'Sign Up',
+                              'login',
                               style: TextStyle(fontSize: 18,color: Colors.white),
                             ),
                           ),
                         ),
-                        SizedBox(height: 10),
-                        TextButton(
-                          onPressed: () {
-                            // Handle navigation to login page
-                          },
-                          child: Text(
-                            'Already have an account? Log In',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
                       ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          AnimatedPositioned(
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+            bottom: signinpage ? 0 : -800,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: [
+                Container(
+                  height: 600,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
+                  ),
+                    child:    Padding(
+                      padding: const EdgeInsets.all(9.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    signinpage = !signinpage; // Toggle the login container
+                                  });
+                                },
+                                icon: Icon(
+                                  Icons.arrow_back_ios_rounded,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 30),
+                                child: Text(
+                                  'Create an Account',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          // Username Field
+                          build3DTextField('Username', false),
+                          SizedBox(height: 20),
+                          // Email Field
+                          build3DTextField('Email', false),
+                          SizedBox(height: 20),
+                          // Password Field
+                          build3DTextField('Password', true),
+                          SizedBox(height: 20),
+                          // Birthday Field
+                          build3DTextField('Birthday (DD/MM/YYYY)', false),
+                          SizedBox(height: 20),
+                          // Sign Up Button
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Colors.greenAccent, Colors.blueAccent],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  offset: Offset(4, 4),
+                                  blurRadius: 8,
+                                ),
+                                BoxShadow(
+                                  color: Colors.white,
+                                  offset: Offset(-4, -4),
+                                  blurRadius: 8,
+                                ),
+                              ],
+                            ),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                padding:
+                                EdgeInsets.symmetric(horizontal: 160, vertical: 15),
+                              ),
+                              onPressed: () {
+                                // Handle sign-up action here
+                              },
+                              child: Text(
+                                'Sign Up',
+                                style: TextStyle(fontSize: 18,color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          TextButton(
+                            onPressed: () {
+                              // Handle navigation to login page
+                            },
+                            child: Text(
+                              'Already have an account? Log In',
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
 
                 ),

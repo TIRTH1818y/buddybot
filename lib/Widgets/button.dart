@@ -16,12 +16,12 @@ Widget build3DTextField(String labelText, bool isPassword) {
       borderRadius: BorderRadius.circular(10),
       boxShadow: [
         BoxShadow(
-          color: Colors.black26,
+          color: Colors.black38,
           offset: Offset(4, 4),
           blurRadius: 8,
         ),
         BoxShadow(
-          color: Colors.white,
+          color: Colors.black12,
           offset: Offset(-4, -4),
           blurRadius: 8,
         ),
