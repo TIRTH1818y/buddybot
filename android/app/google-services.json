@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1013367715256",
+    "project_id": "buddybot-dc6b5",
+    "storage_bucket": "buddybot-dc6b5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013367715256:android:0fbb26886688bd64380b4d",
+        "android_client_info": {
+          "package_name": "com.example.buddybot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1013367715256-u4nl9q6kse48s2325okm1pppk612239k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.buddybot",
+            "certificate_hash": "648e6b2914a9ced321e0ff09f8aa9776cb439bc4"
+          }
+        },
+        {
+          "client_id": "1013367715256-0psp9dka0g6r6rjbvhnvtn7tsg0ass3n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_hu6aPUat_-vICiWDJ5MbEcp2Hae2OLg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1013367715256-0psp9dka0g6r6rjbvhnvtn7tsg0ass3n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1013367715256-jdl9j73t8q2qpf6fa5p5tak8gnitk5kh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.buddybot"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
