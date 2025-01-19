@@ -19,10 +19,18 @@ class _wrapperState extends State<wrapper> {
       body: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context,snapshort){
-            if(snapshort.hasData)
-              return welcome();
-            else
-              return login_signup();
+            if(snapshort.connectionState == ConnectionState.waiting)
+              return Center(child: CircularProgressIndicator());
+            else if(snapshort.hasError){
+              return Center(child: Text("error"));
+            }
+            else {
+              if(snapshort.data == null){
+                return login_signup();
+              }else {
+                return welcome();
+              }
+            }              return login_signup();
           }),
     );
   }

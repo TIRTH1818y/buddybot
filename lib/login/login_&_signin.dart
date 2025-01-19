@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import '../Widgets/button.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class login_signup extends StatefulWidget {
   const login_signup({super.key});
@@ -16,7 +17,6 @@ class login_signup extends StatefulWidget {
 
 class _login_signupState extends State<login_signup> {
   bool isHide = true;
-  bool Loading = true;
 
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -38,12 +38,25 @@ class _login_signupState extends State<login_signup> {
   login() async {
     final GoogleSignInAccount? googleuser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication? googleauth =
-        await googleuser?.authentication;
+    await googleuser?.authentication;
     final credential = GoogleAuthProvider.credential(
       accessToken: googleauth?.accessToken,
       idToken: googleauth?.idToken,
     );
     await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  datacollcation() async {
+    final firestore = FirebaseFirestore.instance;
+    firestore.collection("Buddy_users").add({
+      "name": username.text,
+      "email": Email.text,
+      "password": Password.text
+    }).then((docRef){
+      print(".............Document added with ID: ${docRef.id}.....................");
+    }).catchError((error){
+      print(".............Failed to add document...............: $error");
+    });
   }
 
   bool loginpage = false;
@@ -60,6 +73,7 @@ class _login_signupState extends State<login_signup> {
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Container(child: Image.asset('asset/tech.png',height: 50,),),
               SizedBox(),
               Container(
                 width: 200,
@@ -104,7 +118,7 @@ class _login_signupState extends State<login_signup> {
                         onPressed: () {
                           setState(() {
                             loginpage =
-                                !loginpage; // Toggle the login container
+                            !loginpage; // Toggle the login container
                           });
                         },
                         child: Text(
@@ -144,7 +158,7 @@ class _login_signupState extends State<login_signup> {
                             });
                           },
                           child: Text(
-                            "Sign In",
+                            "Sign up",
                             style: TextStyle(fontSize: 22, color: Colors.black),
                           )),
                     ),
@@ -182,7 +196,7 @@ class _login_signupState extends State<login_signup> {
                               onPressed: () {
                                 setState(() {
                                   loginpage =
-                                      !loginpage; // Toggle the login container
+                                  !loginpage; // Toggle the login container
                                 });
                               },
                               icon: Icon(
@@ -225,7 +239,7 @@ class _login_signupState extends State<login_signup> {
                             controller: email,
                             decoration: InputDecoration(
                               contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 16),
+                              EdgeInsets.symmetric(horizontal: 16),
                               labelText: 'Email',
                               labelStyle: TextStyle(color: Colors.blue),
                               border: InputBorder.none,
@@ -265,7 +279,7 @@ class _login_signupState extends State<login_signup> {
                                       ? Icons.visibility_off
                                       : Icons.visibility)),
                               contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 16),
+                              EdgeInsets.symmetric(horizontal: 16),
                               labelText: 'Password',
                               labelStyle: TextStyle(color: Colors.blue),
                               border: InputBorder.none,
@@ -313,17 +327,14 @@ class _login_signupState extends State<login_signup> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 50, vertical: 15),
                             ),
-                            onPressed: (){
+                            onPressed: () {
                               signin();
-                              setState(() {
-                                Loading=!Loading;
-                              });
                             },
-                            child: Loading? Text(
+                            child: Text(
                               'Login',
                               style:
-                                  TextStyle(fontSize: 18, color: Colors.white),
-                            ):CircularProgressIndicator(strokeWidth: 3,color: Colors.blue,),
+                              TextStyle(fontSize: 18, color: Colors.white),
+                            ),
                           ),
                         ),
                       ],
@@ -361,7 +372,7 @@ class _login_signupState extends State<login_signup> {
                               onPressed: () {
                                 setState(() {
                                   signinpage =
-                                      !signinpage; // Toggle the login container
+                                  !signinpage; // Toggle the login container
                                 });
                               },
                               icon: Icon(
@@ -404,7 +415,7 @@ class _login_signupState extends State<login_signup> {
                             controller: username,
                             decoration: InputDecoration(
                               contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 16),
+                              EdgeInsets.symmetric(horizontal: 16),
                               labelText: 'Username',
                               labelStyle: TextStyle(color: Colors.blue),
                               border: InputBorder.none,
@@ -435,7 +446,7 @@ class _login_signupState extends State<login_signup> {
                             controller: Email,
                             decoration: InputDecoration(
                               contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 16),
+                              EdgeInsets.symmetric(horizontal: 16),
                               labelText: 'Email',
                               labelStyle: TextStyle(color: Colors.blue),
                               border: InputBorder.none,
@@ -466,7 +477,7 @@ class _login_signupState extends State<login_signup> {
                             controller: Password,
                             decoration: InputDecoration(
                               contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 16),
+                              EdgeInsets.symmetric(horizontal: 16),
                               labelText: 'Password',
                               labelStyle: TextStyle(color: Colors.blue),
                               border: InputBorder.none,
@@ -477,7 +488,7 @@ class _login_signupState extends State<login_signup> {
                         Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [Colors.greenAccent, Colors.blueAccent],
+                              colors: [Colors.greenAccent,Colors.blueAccent],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
@@ -502,11 +513,15 @@ class _login_signupState extends State<login_signup> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 160, vertical: 15),
                             ),
-                            onPressed: (() => signup()),
+                            onPressed: (){
+                              datacollcation();
+                              signup();
+
+                            },
                             child: Text(
                               'Sign Up',
                               style:
-                                  TextStyle(fontSize: 18, color: Colors.white),
+                              TextStyle(fontSize: 18, color: Colors.white),
                             ),
                           ),
                         ),
@@ -523,6 +538,7 @@ class _login_signupState extends State<login_signup> {
                             children: [
                               Image.asset('asset/google_photo.png', height: 70),
                               Text("Sign With Google")
+
                             ],
                           ),
                         ),
