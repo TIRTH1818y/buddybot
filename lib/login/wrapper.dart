@@ -1,3 +1,4 @@
+import 'package:buddybot/bot/bot.dart';
 import 'package:buddybot/login/login_&_signin.dart';
 import 'package:buddybot/login/sign_Up.dart';
 import 'package:buddybot/login/wel.dart';
@@ -28,9 +29,9 @@ class _wrapperState extends State<wrapper> {
               if(snapshort.data == null){
                 return login_signup();
               }else {
-                return welcome();
+                return buddychat();
               }
-            }              return login_signup();
+            } return login_signup();
           }),
     );
   }

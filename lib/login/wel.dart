@@ -14,7 +14,7 @@ class welcome extends StatefulWidget {
 }
 
 final bgimage = Image.asset(
-  'asset/blue1.jpg',
+  'asset/blue6.jpg',
   fit: BoxFit.cover,
   height: double.infinity,
 );
