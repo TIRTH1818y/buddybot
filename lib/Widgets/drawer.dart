@@ -1,6 +1,5 @@
-import 'package:buddybot/Widgets/drawer_item/chat_historys.dart';
+import 'package:buddybot/Widgets/drawer_item/about.dart';
 import 'package:buddybot/Widgets/drawer_item/profile.dart';
-import 'package:buddybot/login/wel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,9 +42,7 @@ class _drawerState extends State<drawer> {
       });
     }
   }
-
-
-
+  bool light = true;
   signout() async {
     await GoogleSignIn().signOut();
     await FirebaseAuth.instance.signOut();
@@ -54,20 +51,32 @@ class _drawerState extends State<drawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black54,
       child: Padding(
         padding: const EdgeInsets.only(top: 20),
         child: Column(
           children: [
-            CircleAvatar(
-              backgroundColor: Colors.black,
-              maxRadius: 70,
-              child: Image.asset('asset/tech.png',scale: 5,),
+            Container(
+              width: double.infinity,
+              height: 200,
+              decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage("asset/blue4.jpg",),fit:BoxFit.cover)
+              ),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.white10,
+                    maxRadius: 70,
+                    child: Image.asset('asset/tech.png',scale: 5,),
+                  ),
+                  Text("Email : ${user!.email}",style: TextStyle(color: Colors.cyanAccent),),
+                ],
+              ),
             ),
             SizedBox(
               height: 10,
             ),
-            Text("Email : ${user!.email}"),
+
             SizedBox(
               height: 10,
             ),
@@ -75,24 +84,23 @@ class _drawerState extends State<drawer> {
               thickness: 4,
               color: Colors.grey,
             ),
-            ListTile(
-              leading: Icon(Icons.account_circle_rounded,),
-              onTap: (){Navigator.push(context, MaterialPageRoute(builder: (e)=>ProfilePage()));},
-              title: Text("Profile"),
-            ),
             Padding(
-              padding: const EdgeInsets.only(top: 500),
-              child:
-              ListTile(
-                leading: IconButton(
-                  onPressed: (()=>signout()) ,
-                  icon: Icon(
-                    Icons.logout_outlined,
-                    size: 30,color: Colors.red,
-                  ),
-                ),
-                title: Text("Log Out"),
+              padding: const EdgeInsets.all(5),
+              child: ListTile(
+                leading: Icon(Icons.contact_support_outlined,color: Colors.green,size: 30),
+                onTap: (){Navigator.push(context, MaterialPageRoute(builder: (e)=>about()));},
+                title: Text("About ",style: TextStyle(color: Colors.cyan),),
               ),
+            ),
+            ListTile(
+              leading: IconButton(
+                onPressed: (()=>signout()) ,
+                icon: Icon(
+                  Icons.logout_outlined,
+                  size: 30,color: Colors.red,
+                ),
+              ),
+              title: Text("Log Out",style: TextStyle(color: Colors.orange),),
             ),
           ],
         ),

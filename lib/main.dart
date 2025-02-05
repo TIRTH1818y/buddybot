@@ -1,13 +1,7 @@
-import 'package:buddybot/login/login.main.dart';
-import 'package:buddybot/login/login_&_signin.dart';
-import 'package:buddybot/login/sign_Up.dart';
-import 'package:buddybot/login/wel.dart';
 import 'package:buddybot/login/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'Widgets/button.dart';
-import 'firebase_options.dart';
 
 
 
@@ -32,7 +26,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-        home: wrapper(),
+         home: wrapper(),
+       // home: about(),
     );
   }
 }

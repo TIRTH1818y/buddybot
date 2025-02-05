@@ -1,8 +1,5 @@
 import 'package:buddybot/bot/bot.dart';
 import 'package:buddybot/login/login_&_signin.dart';
-import 'package:buddybot/login/sign_Up.dart';
-import 'package:buddybot/login/wel.dart';
-import 'package:buddybot/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

@@ -311,12 +311,12 @@ class _login_signupState extends State<login_signup> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 250),
-                            child: TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  "Forgot Pasword",
-                                  style: TextStyle(color: Colors.indigo),
-                                )),
+                            // child: TextButton(
+                            //     onPressed: () {},
+                            //     child: Text(
+                            //       "Forgot Pasword",
+                            //       style: TextStyle(color: Colors.indigo),
+                            //     )),
                           ),
                           SizedBox(height: 10),
                           Container(
