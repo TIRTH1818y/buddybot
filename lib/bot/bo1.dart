@@ -4,35 +4,18 @@ import 'package:buddybot/Widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'chat_history.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
-void main() {
-  runApp(const buddychat());
-}
-
-class buddychat extends StatelessWidget {
-
-  const buddychat({Key? key}) : super(key: key);
+class bot1 extends StatefulWidget {
+  const bot1({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: FlutterPythonBackend(),
-    );
-  }
+  State<bot1> createState() => _bot1State();
 }
 
-class FlutterPythonBackend extends StatefulWidget {
-
-  const FlutterPythonBackend({super.key});
-
-  @override
-  _FlutterPythonBackendState createState() => _FlutterPythonBackendState();
-}
-
-class _FlutterPythonBackendState extends State<FlutterPythonBackend> {
+class _bot1State extends State<bot1> {
   final String baseUrl =
-      'https://6000-idx-buddyspace-1736773471127.cluster-a3grjzek65cxex762e4mwrzl46.cloudworkstations.dev/api/data'; // Localhost URL
+      'https://5000-idx-buddyspace-1736773471127.cluster-a3grjzek65cxex762e4mwrzl46.cloudworkstations.dev/api/data'; // Localhost URL
   final TextEditingController promptController = TextEditingController();
 
   // List to store chat messages
@@ -44,7 +27,10 @@ class _FlutterPythonBackendState extends State<FlutterPythonBackend> {
   // Send data to the backend
   Future<void> sendData(String userMessage) async {
     setState(() {
-      chatMessages.add({'sender': 'user', 'message': userMessage,});
+      chatMessages.add({
+        'sender': 'user',
+        'message': userMessage,
+      });
       _scrollToBottom();
     });
 
@@ -103,16 +89,69 @@ class _FlutterPythonBackendState extends State<FlutterPythonBackend> {
     super.dispose();
   }
 
+  /// speech to text ------------
+  ///
+  SpeechToText _speechToText = SpeechToText();
+  bool _isListening = false;
+  String _spokenText = 'Press the mic and speak...';
+  bool _speechEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initSpeech();
+  }
+
+  /// Initialize speech .......
+  Future<void> _initSpeech() async {
+    bool available = await _speechToText.initialize(
+      onStatus: (status) => print('Speech Status: $status'),
+      onError: (error) => print('Speech Error: $error'),
+    );
+    setState(() {
+      _speechEnabled = available;
+    });
+  }
+
+  /// Start listening
+  void _startListening() async {
+    if (!_speechEnabled) {
+      print('Speech recognition not available');
+      return;
+    }
+
+    await _speechToText.listen(
+      onResult: (result) {
+        setState(() {
+          // _spokenText = result.recognizedWords;
+          promptController.text = result.recognizedWords;
+        });
+      },
+    );
+
+    setState(() {
+      _isListening = true;
+    });
+  }
+
+  /// Stop listening
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {
+      _isListening = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return
-      Scaffold(
+    return Scaffold(
       extendBodyBehindAppBar: true,
-   // backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       drawer: drawer(),
       appBar: AppBar(
         elevation: 5,
-              title: const Text("BuddyBot", style: TextStyle(color: Colors.blue)),
+        title: Text("BuddyBot pro",
+            style: TextStyle(color: !theme ? Colors.cyanAccent : Colors.black)),
         backgroundColor: Colors.white,
         flexibleSpace: ClipRRect(
           child: ImageFiltered(
@@ -120,7 +159,9 @@ class _FlutterPythonBackendState extends State<FlutterPythonBackend> {
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.deepPurple.shade500, Colors.black87],
+                  colors: theme
+                      ? [Colors.white10, Colors.grey.shade700]
+                      : [Colors.deepPurple.shade700, Colors.grey.shade500],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -129,7 +170,23 @@ class _FlutterPythonBackendState extends State<FlutterPythonBackend> {
           ),
         ),
         actions: <Widget>[
-
+          IconButton(
+            onPressed: () {
+              setState(() {
+                theme = !theme;
+              });
+            },
+            icon: theme
+                ? Icon(
+                    Icons.sunny,
+                    color: Colors.deepPurple.shade700,
+                  )
+                : Icon(
+                    Icons.dark_mode_outlined,
+                    color: Colors.white,
+                  ),
+            tooltip: "Chat History",
+          ),
           IconButton(
             onPressed: () {
               Navigator.push(
@@ -141,7 +198,7 @@ class _FlutterPythonBackendState extends State<FlutterPythonBackend> {
             },
             icon: const Icon(
               Icons.history,
-              color: Colors.cyan,
+              color: Colors.black,
             ),
             tooltip: "Chat History",
           ),
@@ -153,7 +210,7 @@ class _FlutterPythonBackendState extends State<FlutterPythonBackend> {
             },
             icon: const Icon(
               Icons.cleaning_services,
-              color: Colors.cyan,
+              color: Colors.black,
             ),
             tooltip: "Clear Chat",
           ),
@@ -162,7 +219,9 @@ class _FlutterPythonBackendState extends State<FlutterPythonBackend> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.black, Colors.cyan.shade700],
+            colors: theme
+                ? [Colors.white, Colors.grey.shade700]
+                : [Colors.black87, Colors.deepPurple.shade700],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -180,14 +239,19 @@ class _FlutterPythonBackendState extends State<FlutterPythonBackend> {
                     alignment:
                         isUser ? Alignment.centerRight : Alignment.centerLeft,
                     child: Container(
-                      margin:
-                          const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 8),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient( colors: isUser
-                            ? [Colors.blue.withOpacity(0.7), Colors.purple.withOpacity(0.7)]
-                            : [Colors.black, Colors.black87.withOpacity(0.3)],),
-                       // color: isUser ? Colors.white54 : Colors.white10,
+                        gradient: LinearGradient(
+                          colors: isUser
+                              ? [
+                                  Colors.blue.withOpacity(0.7),
+                                  Colors.purple.withOpacity(0.7)
+                                ]
+                              : [Colors.black, Colors.black87.withOpacity(0.3)],
+                        ),
+                        // color: isUser ? Colors.white54 : Colors.white10,
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
@@ -198,7 +262,8 @@ class _FlutterPythonBackendState extends State<FlutterPythonBackend> {
                       ),
                       child: Text(
                         chat['message'] ?? '',
-                        style: const TextStyle(color: Colors.cyanAccent, fontSize: 16),
+                        style: const TextStyle(
+                            color: Colors.cyanAccent, fontSize: 16),
                       ),
                     ),
                   );
@@ -213,6 +278,12 @@ class _FlutterPythonBackendState extends State<FlutterPythonBackend> {
                     child: TextFormField(
                       controller: promptController,
                       decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          onPressed:
+                              _isListening ? _stopListening : _startListening,
+                          icon: Icon(_isListening ? Icons.mic : Icons.mic_off,color: Colors.blue,),
+
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black87),
                           borderRadius: BorderRadius.circular(5.5),
@@ -221,9 +292,10 @@ class _FlutterPythonBackendState extends State<FlutterPythonBackend> {
                           borderSide: BorderSide(color: Colors.cyan),
                           borderRadius: BorderRadius.circular(5.5),
                         ),
-                        prefixIcon:Padding(
+                        prefixIcon: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: CircleAvatar(child: Image.asset('asset/tech.png')),
+                          child: CircleAvatar(
+                              child: Image.asset('asset/tech.png')),
                         ),
                         hintText: "Chat With AI..",
                         hintStyle: TextStyle(color: Colors.blue),

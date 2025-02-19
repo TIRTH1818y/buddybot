@@ -1,5 +1,4 @@
 import 'package:buddybot/Widgets/drawer_item/about.dart';
-import 'package:buddybot/Widgets/drawer_item/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +13,12 @@ class drawer extends StatefulWidget {
   State<drawer> createState() => _drawerState();
 }
 
+bool theme = false;
 class _drawerState extends State<drawer> {
 
   var email;
   var name;
+
 
   @override
   void initState() {
@@ -51,7 +52,7 @@ class _drawerState extends State<drawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Colors.black54,
+      backgroundColor: theme ? Colors.black54:Colors.white54,
       child: Padding(
         padding: const EdgeInsets.only(top: 20),
         child: Column(
@@ -84,14 +85,12 @@ class _drawerState extends State<drawer> {
               thickness: 4,
               color: Colors.grey,
             ),
-            Padding(
-              padding: const EdgeInsets.all(5),
-              child: ListTile(
-                leading: Icon(Icons.contact_support_outlined,color: Colors.green,size: 30),
-                onTap: (){Navigator.push(context, MaterialPageRoute(builder: (e)=>about()));},
-                title: Text("About ",style: TextStyle(color: Colors.cyan),),
-              ),
+            ListTile(
+              leading: Icon(Icons.contact_support_outlined,color: theme? Colors.greenAccent:Colors.blue.shade700, size: 30),
+              onTap: (){Navigator.push(context, MaterialPageRoute(builder: (e)=>about()));},
+              title: Text("About ",style: TextStyle(color:theme? Colors.cyan:Colors.black),),
             ),
+
             ListTile(
               leading: IconButton(
                 onPressed: (()=>signout()) ,
@@ -100,7 +99,7 @@ class _drawerState extends State<drawer> {
                   size: 30,color: Colors.red,
                 ),
               ),
-              title: Text("Log Out",style: TextStyle(color: Colors.orange),),
+              title: Text("Log Out",style: TextStyle(color: Colors.deepOrange),),
             ),
           ],
         ),

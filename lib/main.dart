@@ -1,3 +1,4 @@
+import 'package:buddybot/bot/bo1.dart';
 import 'package:buddybot/login/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +27,10 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-         home: wrapper(),
+        home: wrapper(),
+        //home: bot1(),
        // home: about(),
+
     );
   }
 }

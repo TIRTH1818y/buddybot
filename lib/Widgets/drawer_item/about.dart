@@ -2,14 +2,18 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../drawer.dart';
+
 class about extends StatelessWidget {
+
   const about({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white38,
+     // backgroundColor: Colors.white38,
       appBar: AppBar(
+       
         flexibleSpace: ClipRRect(
           child: ImageFiltered(
             imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -59,7 +63,7 @@ class about extends StatelessWidget {
                           ],
                         ),
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 10,left: 15),
+                        padding: const EdgeInsets.only(top: 15,left: 20),
                         child: Text(" ●  Buddy Bot is your smart AI assistant, designed to help with study-related queries and IT problem-solving. Whether you're tackling coding challenges, troubleshooting technical issues, or seeking study guidance, Buddy Bot is here to assist you anytime!",
                           style: TextStyle(color: Colors.cyanAccent,fontSize: 17),),
                       )

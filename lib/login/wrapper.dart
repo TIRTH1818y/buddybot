@@ -1,3 +1,5 @@
+
+import 'package:buddybot/bot/bo1.dart';
 import 'package:buddybot/bot/bot.dart';
 import 'package:buddybot/login/login_&_signin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,7 +28,8 @@ class _wrapperState extends State<wrapper> {
               if(snapshort.data == null){
                 return login_signup();
               }else {
-                return buddychat();
+                //return buddychat();
+                return bot1();
               }
             } return login_signup();
           }),
