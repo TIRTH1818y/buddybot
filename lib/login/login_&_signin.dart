@@ -8,6 +8,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../int.dart';
+
 class login_signup extends StatefulWidget {
   const login_signup({super.key});
 
@@ -17,7 +19,7 @@ class login_signup extends StatefulWidget {
 
 class _login_signupState extends State<login_signup> {
   bool isHide = true;
-  bool isloading =false;
+  bool isloading = false;
 
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -25,15 +27,40 @@ class _login_signupState extends State<login_signup> {
   TextEditingController Password = TextEditingController();
   TextEditingController username = TextEditingController();
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    NetworkCheck().initializeInternetStatus(context);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    NetworkCheck().cancelSubscription();
+  }
+
   signin() async {
     await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email.text, password: password.text);
+    NetworkCheck().initializeInternetStatus(context);
   }
 
   signup() async {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: Email.text, password: Password.text);
     Get.offAll(wrapper());
+    final firestore = FirebaseFirestore.instance;
+    firestore
+        .collection("Buddy_users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({
+      "userid": FirebaseAuth.instance.currentUser!.uid,
+      "name": username.text,
+      "email": Email.text,
+      "password": Password.text,
+    });
   }
 
   login() async {
@@ -45,20 +72,6 @@ class _login_signupState extends State<login_signup> {
       idToken: googleauth?.idToken,
     );
     await FirebaseAuth.instance.signInWithCredential(credential);
-  }
-
-  datacollcation() async {
-    final firestore = FirebaseFirestore.instance;
-    firestore.collection("Buddy_users").add({
-      "name": username.text,
-      "email": Email.text,
-      "password": Password.text,
-    }).then((docRef) {
-      print(
-          ".............Document added with ID: ${docRef.id}.....................");
-    }).catchError((error) {
-      print(".............Failed to add document...............: $error");
-    });
   }
 
   bool loginpage = false;
@@ -348,71 +361,71 @@ class _login_signupState extends State<login_signup> {
                                     horizontal: 50, vertical: 15),
                               ),
                               onPressed: () {
-
-                                if (email.text == "" &&
-                                    password.text == "") {
+                                if (email.text == "" && password.text == "") {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(SnackBar(
-                                      content: Text(
-                                        "Please Enter All fields",
-                                        style: TextStyle(color: Colors.red),
-                                      )));
-                                }
-                               else if (email.text == null || email.text.isEmpty) {
+                                          content: Text(
+                                    "Please Enter All fields",
+                                    style: TextStyle(color: Colors.red),
+                                  )));
+                                } else if (email.text == null ||
+                                    email.text.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                         content: Text(
                                       'Please Enter Email!',
                                       style: TextStyle(color: Colors.red),
                                     )),
-                                  );}
-                                  else if (!email.text.contains('@')) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
+                                  );
+                                } else if (!email.text.contains('@')) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                    content: Text(
-                                    'Email must contain @',
-                                    style: TextStyle(color: Colors.red),
+                                        content: Text(
+                                      'Email must contain @',
+                                      style: TextStyle(color: Colors.red),
                                     )),
-                                    );
-                                    }
-                                 else if (password.text == null ||
-                                      password.text.isEmpty) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Please Enter password',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
+                                  );
+                                } else if (password.text == null ||
+                                    password.text.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Please Enter password',
+                                        style: TextStyle(color: Colors.red),
                                       ),
-                                    );
-                                  }
-                                 else if (password.text.length != 6) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Password must be 6 characters long',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
+                                    ),
+                                  );
+                                } else if (password.text.length != 6) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Password must be 6 characters long',
+                                        style: TextStyle(color: Colors.red),
                                       ),
-                                    );
-                                  }
-                                 else {
-                                  try{  setState(() {
-                                    isloading = true;
-                                  });}on FirebaseAuthException catch(e){
+                                    ),
+                                  );
+                                } else {
+                                  try {
+                                    setState(() {
+                                      isloading = true;
+                                    });
+                                  } on FirebaseAuthException catch (e) {
                                     String error = "check your data";
                                     setState(() {
                                       isloading = true;
                                     });
-                                    switch(e.code){
+                                    switch (e.code) {
                                       case 'ERROR_INVALID_EMAIL':
-                                        print("///////////////////////////////////////////////////////Invalid Email////////////////////////////////////////////////////////// ");
+                                        print(
+                                            "///////////////////////////////////////////////////////Invalid Email////////////////////////////////////////////////////////// ");
                                         break;
                                       default:
                                         ('An unexpected error occurred: ${e.message}');
                                     }
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(error)));
                                   }
+
                                   signin();
                                 }
                                 return null;
@@ -624,8 +637,7 @@ class _login_signupState extends State<login_signup> {
                                     "Please Enter All fields",
                                     style: TextStyle(color: Colors.red),
                                   )));
-                                }
-                              else  if (username.text == null ||
+                                } else if (username.text == null ||
                                     username.text.isEmpty) {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(SnackBar(
@@ -633,24 +645,22 @@ class _login_signupState extends State<login_signup> {
                                     "Please Enter username",
                                     style: TextStyle(color: Colors.red),
                                   )));
-                                }
-                               else if (Email.text == null || Email.text.isEmpty) {
+                                } else if (Email.text == null ||
+                                    Email.text.isEmpty) {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(SnackBar(
                                           content: Text(
                                     "Please Enter email",
                                     style: TextStyle(color: Colors.red),
                                   )));
-                                }
-                              else  if (!Email.text.contains('@')) {
+                                } else if (!Email.text.contains('@')) {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(SnackBar(
                                           content: Text(
                                     "Please Enter email",
                                     style: TextStyle(color: Colors.red),
                                   )));
-                                }
-                               else if (Password.text == null ||
+                                } else if (Password.text == null ||
                                     password.toString().isEmpty) {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(SnackBar(
@@ -658,8 +668,7 @@ class _login_signupState extends State<login_signup> {
                                     "Please Enter Password",
                                     style: TextStyle(color: Colors.red),
                                   )));
-                                }
-                               else if (Password.text.length != 6) {
+                                } else if (Password.text.length != 6) {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(SnackBar(
                                           content: Text(
@@ -667,7 +676,6 @@ class _login_signupState extends State<login_signup> {
                                     style: TextStyle(color: Colors.red),
                                   )));
                                 } else {
-                                  datacollcation();
                                   signup();
                                 }
                               },

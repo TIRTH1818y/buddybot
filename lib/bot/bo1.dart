@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:buddybot/Widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../int.dart';
 import 'chat_history.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -86,6 +87,7 @@ class _bot1State extends State<bot1> {
     // Dispose of the ScrollController when the widget is removed
     _scrollController.dispose();
     promptController.dispose();
+
     super.dispose();
   }
 
@@ -100,6 +102,7 @@ class _bot1State extends State<bot1> {
   void initState() {
     super.initState();
     _initSpeech();
+    NetworkCheck().initializeInternetStatus(context);
   }
 
   /// Initialize speech .......
