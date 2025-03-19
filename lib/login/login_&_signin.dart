@@ -589,10 +589,22 @@ class _login_signupState extends State<login_signup> {
                             ),
                             child: TextField(
                               controller: Password,
+                              maxLength: 6,
+                              obscureText: isHide,
+                              obscuringCharacter: '●',
                               decoration: InputDecoration(
                                 contentPadding:
                                     EdgeInsets.symmetric(horizontal: 16),
                                 labelText: 'Password',
+                                suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        isHide = !isHide;
+                                      });
+                                    },
+                                    icon: Icon(isHide
+                                        ? Icons.visibility_off
+                                        : Icons.visibility)),
                                 labelStyle: TextStyle(color: Colors.blue),
                                 border: InputBorder.none,
                               ),
@@ -704,15 +716,7 @@ class _login_signupState extends State<login_signup> {
                             ),
                           ),
                           SizedBox(height: 10),
-                          TextButton(
-                            onPressed: () {
-                              // Handle navigation to login page
-                            },
-                            child: Text(
-                              'Already have an account? Log In',
-                              style: TextStyle(color: Colors.blue),
-                            ),
-                          ),
+
                         ],
                       ),
                     ),

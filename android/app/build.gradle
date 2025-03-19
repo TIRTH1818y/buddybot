@@ -25,7 +25,7 @@ android {
     defaultConfig {
         applicationId "com.example.buddybot"
         minSdkVersion 23 // Change from 21 to 23
-        targetSdkVersion 34
+        targetSdk = flutter.targetSdkVersion
         versionCode flutter.versionCode
         versionName flutter.versionName
         multiDexEnabled true

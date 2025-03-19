@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:buddybot/Widgets/drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../int.dart';
@@ -15,6 +16,7 @@ class bot1 extends StatefulWidget {
 }
 
 class _bot1State extends State<bot1> {
+
   final String baseUrl =
       'https://5000-idx-buddyspace-1736773471127.cluster-a3grjzek65cxex762e4mwrzl46.cloudworkstations.dev/api/data'; // Localhost URL
   final TextEditingController promptController = TextEditingController();
@@ -24,6 +26,7 @@ class _bot1State extends State<bot1> {
 
   // ScrollController for ListView
   final ScrollController _scrollController = ScrollController();
+
 
   // Send data to the backend
   Future<void> sendData(String userMessage) async {
@@ -153,7 +156,7 @@ class _bot1State extends State<bot1> {
       drawer: drawer(),
       appBar: AppBar(
         elevation: 5,
-        title: Text("BuddyBot pro",
+        title: Text("BuddyBot ",
             style: TextStyle(color: !theme ? Colors.cyanAccent : Colors.black)),
         backgroundColor: Colors.white,
         flexibleSpace: ClipRRect(
@@ -284,8 +287,10 @@ class _bot1State extends State<bot1> {
                         suffixIcon: IconButton(
                           onPressed:
                               _isListening ? _stopListening : _startListening,
-                          icon: Icon(_isListening ? Icons.mic : Icons.mic_off,color: Colors.blue,),
-
+                          icon: Icon(
+                            _isListening ? Icons.mic : Icons.mic_off,
+                            color: Colors.blue,
+                          ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black87),

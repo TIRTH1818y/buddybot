@@ -1,4 +1,5 @@
 import 'package:buddybot/Widgets/drawer_item/about.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +20,35 @@ bool theme = false;
 class _drawerState extends State<drawer> {
   var email;
   var name;
+  bool googleuser = false;
+
+  void checkUserAuthMethod() {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      for (var provider in user.providerData) {
+        if (provider.providerId == 'google.com') {
+          setState(() {
+            googleuser = true;
+          });
+          print("User signed in using Google");
+        } else if (provider.providerId == 'password') {
+          print("User signed in using Email & Password");
+        } else {
+          print("User signed in using another method: ${provider.providerId}");
+        }
+      }
+    } else {
+      print("No user is signed in");
+    }
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getImage();
+    checkUserAuthMethod();
   }
 
   final user = FirebaseAuth.instance.currentUser;
@@ -32,7 +56,8 @@ class _drawerState extends State<drawer> {
       FirebaseFirestore.instance.collection('Buddy_users');
 
   Future<void> getImage() async {
-    DocumentSnapshot snapshot = await usersCollection.doc().get();
+    DocumentSnapshot snapshot =
+        await usersCollection.doc(FirebaseAuth.instance.currentUser!.uid).get();
     if (snapshot.exists) {
       final Email = snapshot['email'];
       final Name = snapshot['name'];
@@ -43,7 +68,6 @@ class _drawerState extends State<drawer> {
     }
   }
 
-  bool light = true;
 
   signout() async {
     await GoogleSignIn().signOut();
@@ -53,7 +77,7 @@ class _drawerState extends State<drawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: theme ? Colors.black54 : Colors.white54,
+      backgroundColor: theme ? Colors.white38 : Colors.black38,
       child: Padding(
         padding: const EdgeInsets.only(top: 20),
         child: Column(
@@ -94,22 +118,26 @@ class _drawerState extends State<drawer> {
               thickness: 4,
               color: Colors.grey,
             ),
-            ListTile(
-              leading: Icon(Icons.account_circle_rounded,
-                  color: theme ? Colors.greenAccent : Colors.blue.shade700,
-                  size: 30),
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (e) => MyProfile()));
-              },
-              title: Text(
-                "profile",
-                style: TextStyle(color: theme ? Colors.cyan : Colors.black),
-              ),
-            ),
+            googleuser == true
+                ? Center()
+                : ListTile(
+                    leading: Icon(Icons.account_circle_rounded,
+                        color:
+                            theme ? Colors.blue.shade700 : Colors.greenAccent,
+                        size: 30),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (e) => MyProfile()));
+                    },
+                    title: Text(
+                      "profile",
+                      style:
+                          TextStyle(color: theme ? Colors.black : Colors.cyan),
+                    ),
+                  ),
             ListTile(
               leading: Icon(Icons.contact_support_outlined,
-                  color: theme ? Colors.greenAccent : Colors.blue.shade700,
+                  color: theme ?Colors.blue.shade700 : Colors.greenAccent,
                   size: 30),
               onTap: () {
                 Navigator.push(
@@ -117,15 +145,14 @@ class _drawerState extends State<drawer> {
               },
               title: Text(
                 "About ",
-                style: TextStyle(color: theme ? Colors.cyan : Colors.black),
+                style: TextStyle(color: theme ? Colors.black : Colors.cyan),
               ),
             ),
-
             ListTile(
-              leading:  Icon(
-                  Icons.logout_outlined,
-                  size: 30,
-                  color: Colors.red,
+              leading: Icon(
+                Icons.logout_outlined,
+                size: 30,
+                color: Colors.red,
               ),
               onTap: (() => signout()),
               title: Text(

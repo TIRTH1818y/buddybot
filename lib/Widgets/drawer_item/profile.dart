@@ -1,17 +1,10 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
-
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class MyProfile extends StatefulWidget {
-  const MyProfile({
-    super.key,
-  });
+  const MyProfile({super.key});
 
   @override
   State<MyProfile> createState() => _MyProfileState();
@@ -29,7 +22,6 @@ class _MyProfileState extends State<MyProfile> {
       .doc(FirebaseAuth.instance.currentUser!.uid);
   var username;
   var email;
-
 
   updateProfile() async {
     try {
@@ -57,61 +49,29 @@ class _MyProfileState extends State<MyProfile> {
     return StreamBuilder(
         stream: userData.snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.waiting) {
-            if (snapshot.data!.exists == false) {
-              return Center();
-            }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.data!.exists == false || !snapshot.hasData) {
+            return const Center(
+              child: Text("No Data Available."),
+            );
           }
           if (snapshot.hasData) {
-            final data = snapshot.data?.data() as Map<String, dynamic>;
+            final data = snapshot.data!.data() as Map<String, dynamic>;
             username = data["name"].toString();
-
             email = data["email"].toString();
 
             return Scaffold(
+              backgroundColor: Colors.blueGrey,
               appBar: AppBar(
-                actions: [
-                  if (modifyUsername == true)
-                    Row(
-                      children: [
-                        TextButton(
-                            onPressed: () {
-                              setState(() {
-                                modifyUsername = false;
-                              });
-                            },
-                            child: Text(
-                              "Cancel",
-                              style: TextStyle(fontSize: 20, color: Colors.red),
-                            )),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15, bottom: 15),
-                          child: VerticalDivider(),
-                        ),
-                        !loading
-                            ? TextButton(
-                                onPressed: () {
-                                  updateProfile();
-                                },
-                                child: Text(
-                                  "Update",
-                                  style: TextStyle(
-                                      fontSize: 20, color: Colors.blue),
-                                ))
-                            : Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: SizedBox(
-                                    height: 30,
-                                    width: 30,
-                                    child: CircularProgressIndicator()),
-                              ),
-                      ],
-                    )
-                ],
-                title: Text(
+                backgroundColor: Colors.blueGrey.shade700,
+                title: const Text(
                   "My Profile",
                   style: TextStyle(
-                      color: Colors.blue,
+                      color: Colors.cyan,
                       fontSize: 22,
                       fontWeight: FontWeight.bold),
                 ),
@@ -119,65 +79,102 @@ class _MyProfileState extends State<MyProfile> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    icon: Icon(Icons.arrow_back_ios_new)),
-              ),
-              body: ListView(
-                children: [
-                  ListTile(
-                    leading: Icon(
-                      color: Colors.blue,
-                      Icons.person_2_outlined,
-                      size: 30,
-                    ),
-                    title: Text(
-                      "Username",
-                      style: TextStyle(fontSize: 15, color: Colors.blue),
-                    ),
-                    subtitle: modifyUsername
-                        ? TextFormField(
-                            style: TextStyle(fontSize: 18, color: Colors.black),
-                            autofocus: true,
-                            controller: usernameC,
-                          )
-                        : Text(
-                            username,
-                            style: TextStyle(fontSize: 18, color: Colors.black),
+                    icon: const Icon(Icons.arrow_back_ios_new)),
+                actions: [
+                  if (modifyUsername)
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              modifyUsername = false;
+                            });
+                          },
+                          child: const Text(
+                            "Cancel",
+                            style: TextStyle(fontSize: 16, color: Colors.red),
                           ),
-                    trailing: modifyUsername
-                        ? null
-                        : IconButton(
-                            onPressed: () {
-                              setState(() {
-                                modifyUsername = true;
-                                usernameC.text = username;
-                              });
-                            },
-                            icon: Icon(
-                              color: Colors.blue,
-                              Icons.mode_edit_outline_outlined,
-                              size: 30,
-                            )),
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      color: Colors.blue,
-                      Icons.email_outlined,
-                      size: 30,
+                        ),
+                        const SizedBox(width: 10),
+                        !loading
+                            ? TextButton(
+                          onPressed: () {
+                            updateProfile();
+                          },
+                          child: const Text(
+                            "Update",
+                            style: TextStyle(fontSize: 16, color: Colors.green),
+                          ),
+                        )
+                            : const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator()),
+                        ),
+                      ],
                     ),
-                    title: Text(
-                      "Email",
-                      style: TextStyle(fontSize: 15, color: Colors.blue),
-                    ),
-                    subtitle: Text(
-                      email,
-                      style: TextStyle(fontSize: 18, color: Colors.black),
-                    ),
-                  ),
                 ],
+              ),
+              body: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.black87,
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.person_2_outlined, color: Colors.blue, size: 30),
+                          const SizedBox(width: 15),
+                          Expanded(
+                            child: modifyUsername
+                                ? TextField(
+                              controller: usernameC,
+                              style: const TextStyle(fontSize: 18,color: Colors.deepPurple),
+                            )
+                                : Text(username, style: const TextStyle(fontSize: 18,color: Colors.white)),
+                          ),
+                          if (!modifyUsername)
+                            IconButton(
+                              icon: const Icon(Icons.mode_edit_outline_outlined, color: Colors.blue),
+                              onPressed: () {
+                                setState(() {
+                                  modifyUsername = true;
+                                  usernameC.text = username;
+                                });
+                              },
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.black87,
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.email_outlined, color: Colors.blue, size: 30),
+                          const SizedBox(width: 15),
+                          Expanded(
+                            child: Text(email, style: const TextStyle(fontSize: 18,color: Colors.white)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           }
-          return Center();
+          return const Center();
         });
   }
 }
